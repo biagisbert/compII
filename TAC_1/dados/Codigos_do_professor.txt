@@ -22,7 +22,7 @@ print ("Sequencia: %s"%sequencia)
 refArquivo.close()
 
 Codigo 3
-refArquivo = open("/home/vitor/Downloads/TcCLB.506717.80_AA.fasta")
+refArquivo = open("C:\\Users\\bia_g\\PycharmProjects\\compII\\TAC_1\\dados\\TriTrypDB-47_TcruziCLBrenerEsmeraldo-like_AnnotatedProteins.fasta")
 cabecalho = refArquivo.readline()[1:-1]
 sequencia = ""
 for linha in refArquivo:
