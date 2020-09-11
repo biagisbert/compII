@@ -2,6 +2,9 @@ refArquivo = open("C:\\Users\\bia_g\\PycharmProjects\\compII\\TAC_1\\dados\\TriT
 cabecalho = refArquivo.readline()[0:-1]
 sequencia = ""
 for linha in refArquivo:
-    sequencia += linha.replace('\n','')
-    print (("Cabecalho: %s"%linha), '\t', ("Sequencia: %s"%sequencia))
+    if '>' in linha:
+        print ("Cabecalho: %s"%linha)
+    else:
+        sequencia = linha
+    print ("Sequencia: %s"%sequencia)
 refArquivo.close()
