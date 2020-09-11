@@ -3,5 +3,5 @@ cabecalho = refArquivo.readline()[1:-1]
 sequencia = ""
 for linha in refArquivo:
     sequencia += linha.replace('\n','')
-print (("Cabecalho: %s"%cabecalho)),'\t',("Sequencia: %s"%sequencia)
+print (("Cabecalho: %s"%cabecalho),'\t',("Sequencia: %s"%sequencia))
 refArquivo.close()
