@@ -1,5 +1,5 @@
 Codigo 1
-refArquivo = open("/home/vitor/Downloads/TcCLB.506717.80_AA.fasta")
+refArquivo = open("C:\\Users\\bia_g\\PycharmProjects\\compII\\TAC_1\\dados\\TcCLB.506717.80.AA.fasta")
 arquivoFasta = refArquivo.read()
 cabecalho = arquivoFasta.split('\n')[0][1:]
 sequencia = ''.join(arquivoFasta.split('\n')[1:])
@@ -8,7 +8,7 @@ print("Sequencia: %s"%sequencia)
 refArquivo.close(
 
 Codigo 2
-refArquivo = open("/home/vitor/Downloads/TcCLB.506717.80_AA.fasta")
+refArquivo = open("C:\\Users\\bia_g\\PycharmProjects\\compII\\TAC_1\\dados\\TcCLB.506717.80.AA.fasta")
 primeiraLinha = refArquivo.readline()
 cabecalho = primeiraLinha[1:-1]
 sequencia = ""
@@ -32,7 +32,7 @@ print ("Sequencia: %s"%sequencia)
 refArquivo.close()
 
 Codigo 4
-refArquivoEntrada = open("/home/vitor/Downloads/TcCLB.506717.80_AA.fasta")
+refArquivoEntrada = open("C:\\Users\\bia_g\\PycharmProjects\\compII\\TAC_1\\dados\\TcCLB.506717.80.AA.fasta")
 refArquivoSaida = open("/home/vitor/Downloads/TcCLB.506717.80_AA.out",'w')
 refArquivoSaida.write("header\tseq\n")
 cabecalho = refArquivoEntrada.readline()[1:-1]
@@ -44,7 +44,7 @@ refArquivoEntrada.close()
 refArquivoSaida.close()
 
 Codigo 5
-refArquivoEntrada = open("/home/vitor/Downloads/species.csv")
+refArquivoEntrada = open("C:\\Users\\bia_g\\PycharmProjects\\compII\\TAC_1\\dados\\species.csv")
 refArquivoEntrada.readline()
 for linha in refArquivoEntrada:
     data = linha.split(",")
