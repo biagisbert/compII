@@ -1,4 +1,8 @@
-#Algumas métricas estatísticas podem nos dar a dimensão do nosso problema.#
-# Calcule o número médio e a mediana de mortes por tuberculose.#
-#medio=colocar em ordem numerica e pegar o numero do meio
-#mediana= media dos numeros
+import pandas as pd
+import xlrd
+ler=pd.read_excel("C:\\Users\\bia_g\\PycharmProjects\\compII\\Exercicio_1\\dados\\WHO POP TB some.xls.xls")
+soma = ler['TB deaths'].sum()//12
+mediana = ler['TB deaths'].iloc[[0,1]].sum()
+med = mediana//2
+print("Numero medio = %s" %soma)
+print( "Mediana = %s" %med)
