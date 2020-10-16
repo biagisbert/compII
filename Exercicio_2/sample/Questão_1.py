@@ -1,0 +1,6 @@
+sequencia = input("Digite a sequencia: ")
+string = sequencia.__str__().upper()
+quant_C = string.count("C")
+quant_G = string.count("G")
+conteudo = ((quant_C + quant_G)*100)/len(sequencia)
+print(conteudo)
