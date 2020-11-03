@@ -1,0 +1,90 @@
+## Lista 3 - questao 1
+# 1 - Escreva um código em Python que leia um número não determinado de valores (podendo ser positivos e negativos) e
+# calcule e escreva a média aritmética dos valores lidos,
+# a quantidade de valores positivos,
+# a quantidade de valores negativos
+# e o percentual de valores negativos e positivos.
+
+total_positivos = 0
+total_negativos = 0
+total_num_lidos = 0
+
+total_soma = 0
+
+while True:
+    num = int(input("Digite um número: "))
+
+    total_num_lidos += 1
+
+    if num > -1:
+        total_positivos += 1
+    else:
+        total_negativos += 1
+
+    total_soma += num
+
+    opcao = input("Deseja continuar? [S/n] ")
+
+    if opcao.upper() == "N":
+        break
+
+media = total_soma/total_num_lidos
+
+print("Média aritmética = ", media)
+print("Números positivos = ", total_positivos)
+print("Números negativos = ", total_negativos)
+print("Percentual dos valores positivos = %.02f" % (total_positivos*100/total_num_lidos))
+print("Percentual dos valores negativos = %.02f" % (total_negativos*100/total_num_lidos))
+
+# 2 - Faça um algoritmo para ler o nome, as três notas e o número de faltas de um aluno e
+# escrever qual a sua situação final: Aprovado, Reprovado por Falta ou Reprovado por Média.
+# A média para aprovação é 7,0 e o limite de faltas é 25% do total de aulas.
+# O número de aulas ministradas no semestre foi de 80. Caso seja reprovado por falta e por média, prevalece a reprovação por falta.
+
+
+
+AULAS_MINISTRADAS = 80
+NUM_MAX_FALTAS = 80*0.25
+MEDIA_APROVACAO = 7
+
+
+nome = input("Digite o nome: ")
+nota1 = float("Digite a nota 1: ")
+nota2 = float("Digite a nota 2: ")
+nota3 = float("Digite a nota 3: ")
+num_faltas = int(input("Digite o número de faltas: "))
+
+media = (nota1 + nota2 + nota3)/3
+
+if num_faltas > NUM_MAX_FALTAS:
+    print("Reprovado por falta.")
+elif media < MEDIA_APROVACAO:
+    print("Reprovado por média.")
+else:
+    print("Aprovado.")
+
+
+## Exercícios 3 - questao 3
+
+# Elabore um algoritmo que leia o peso e a altura de um adulto e mostre sua condição de acordo com a tabela abaixo.
+##  IMC = peso/(altura*altura)
+
+# IMC em adultos	Condição
+# Abaixo de 18,5	Abaixo do peso
+# Entre 18,5 e 25	Peso normal
+# Entre 25 e 30		Acima do peso
+# Acima de 30		obeso
+
+massa = float(input("Digite seu peso: "))
+altura = float(input("Digite sua altura em metros: "))
+
+imc = massa/(altura * altura)
+
+if imc < 18.5:
+    print("Condição Abaixo do Peso.")
+elif imc < 25:
+    print("Condição Peso Normal.")
+elif imc < 30:
+    print("Condição Acima do Peso.")
+else:
+    print("Condição Obeso.")
