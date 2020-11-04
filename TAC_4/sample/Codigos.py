@@ -1,24 +1,18 @@
 import re
-from Bio.Seq import Seq
 from Bio import SeqIO
-
-def Counting_Motifs(sequence,motif):
-    gene=str(line.id)
-    mc=sequence.count(motif)
-    if mc!=0:
-        print("Identificador:",gene,"Motivo",motif,"Count",mc,sep="")
-
-motif=str(input("Insira seu motivo de DNA ou AA:")).upper()
-
-if re.search('^[ACGT]+$',motif):
+motivo = input("Digite sua sequencia: ").upper()
+arquivo = "C:\\Users\\bia_g\\PycharmProjects\\compII\\TAC_1\\dados\\TriTrypDB-47_TcruziCLBrenerEsmeraldo-like_AnnotatedProteins.fasta"
+ref_arquivo = SeqIO.parse(arquivo, "fasta")
+count = 0
+if re.search('^[ACGT]+$',motivo):
     print("É uma sequencia de DNA")
-    mulfasta = SeqIO.parse(open("C:\\Users\\bia_g\\PycharmProjects\\compII\\TAC_3\\dados\\TriTrypDB-47_TcruziCLBrenerEsmeraldo-like_AnnotatedProteins.fasta",'r'),"fasta")
-    for line in mulfasta:
-        sequencia=str(line.seq)
-        Counting_Motifs(sequencia,motif)
+    for line in ref_arquivo:
+        print("ID %s" % str(line.id))
+        count = count +1
+    print("O motivo se repete %s vezes" % count)
 else:
-    print("É uma sequencia de AA")
-    multifasta=SeqIO.parse(open("C:\\Users\\bia_g\\PycharmProjects\\compII\\TAC_3\\dados\\TriTrypDB-47_TcruziCLBrenerEsmeraldo-like_AnnotatedProteins.fasta"),"fasta")
-    for line in multifasta:
-        sequence=str(line.seq)
-        Counting_Motifs(sequence,motif)
+    print("É uma sequencia de aminoácidos")
+    for line in ref_arquivo:
+        print("ID %s" % str(line.id))
+        count = count + 1
+    print("O motivo se repete %s vezes" % count)
