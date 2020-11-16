@@ -1,9 +1,11 @@
-import pandas as pd
-import numpy as np
 import sys
+import pandas as pd
 from Bio import SeqIO
+from Bio.Blast.Applications import NcbiblastxCommandline
 
-#Caminho abrindo o terminal no projeto final: python teste\Teste.py dados\Tabela_1.xlsx dados\Rdesconhecidus.fasta dados\VectorBase-48_RprolixusCDC_AnnotatedProteins.fasta
+blast_path = "C:\\Program Files\\NCBI\\blast-2.10.1+\\bin\\blastx.exe"
+out_blast = "C:\\Users\\bia_g\\PycharmProjects\\compII\\Projeto_Final\\dados\\out.blastp.outfmt6.fasta"
+
 Tabela_1 = sys.argv[1]
 seq_desconhecida = sys.argv[2]
 arquivo_multi = sys.argv[3]
@@ -37,20 +39,19 @@ data_media = {
    'Cond_A_CPM_media' : ((df['Rep1_A_CPM']+df['Rep2_A_CPM'])/2),
    'Cond_B_CPM_media' : ((df['Rep1_B_CPM']+df['Rep2_B_CPM'])/2)}
 
-df_media = pd.DataFrame(data_media, columns=['gene_id','Rep1_A_CPM','Rep2_A_CPM','Rep1_B_CPM','Rep2_B_CPM',
-                                            'Cond_A_CPM_media','Cond_B_CPM_media'])
+df_media = pd.DataFrame(data_media, columns=['gene_id','Rep1_A_CPM','Rep2_A_CPM','Rep1_B_CPM','Rep2_B_CPM','Cond_A_CPM_media','Cond_B_CPM_media'])
 
 df_final = pd.merge(df,df_media)
-#ver um jeito de pegar os 5 maiores nos dois
-#obs: nao precisa printar
-asc_A = df_final.sort_values('Cond_A_CPM_media')
-print(asc_A['Cond_A_CPM_media'])
-asc_B = df_final.sort_values('Cond_B_CPM_media')
-print(asc_B['Cond_B_CPM_media'])
 
-#Fazer a função do BLAST
+asc_A = pd.DataFrame(df_final.nlargest(5, 'Cond_A_CPM_media'))
+asc_B = pd.DataFrame(df_final.nlargest(5, 'Cond_B_CPM_media'))
+A_and_B = asc_A.append(asc_B)
 
-
-
+blast_A_and_B = NcbiblastxCommandline(cmd=blast_path, query=A_and_B, subject=dm, outfmt=6, out=out_blast, evalue=0.05)
+stdout, stderr = blast_A_and_B()
+blast_result = open(out_blast, "r")
+result_blast = pd.read_csv("C:\\Users\\bia_g\\PycharmProjects\\compII\\Projeto_Final\\dados\\out.blastp.outfmt6.fasta", sep='\t', names=["qseqid","sseqid","pident","length","mismatch","gapopen","qstart","qend","sstart","send","evalue","bitscore"])
+max_hit = result_blast.sort_values('bitscore')
+print(max_hit.iloc[[-1]])
 
 #Revisar o codigo

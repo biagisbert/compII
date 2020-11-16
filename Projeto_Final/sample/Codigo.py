@@ -17,4 +17,5 @@
 #### e id_proteína_encontrada é o identificador da sequência de proteína com melhor hit em R. prolixus.
 
 
-#Caminho abrindo o terminal no projeto final: python teste\Teste.py dados\Tabela_1.xlsx dados\Rdesconhecidus.fasta dados\VectorBase-48_RprolixusCDC_AnnotatedProteins.fasta
+#Caminho abrindo o terminal no projeto final:
+# python PycharmProjects\compII\Projeto_Final\teste\Teste.py PycharmProjects\compII\Projeto_Final\dados\Tabela_1.xlsx PycharmProjects\compII\Projeto_Final\dados\Rdesconhecidus.fasta dados\VectorBase-48_RprolixusCDC_AnnotatedProteins.fasta
