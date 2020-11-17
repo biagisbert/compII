@@ -20,38 +20,32 @@ fatorNormalizado_Rep1_B = 10**6/dt['Rep1_B'].sum()
 fatorNormalizado_Rep2_B = 10**6/dt['Rep2_B'].sum()
 
 data_normalizado = {
-   'gene_id' : dt['gene_id'],
-   'Rep1_A_CPM' : dt['Rep1_A'] * fatorNormalizado_Rep1_A,
+   'gene_id': dt['gene_id'],
+   'Rep1_A_CPM': dt['Rep1_A'] * fatorNormalizado_Rep1_A,
    'Rep2_A_CPM': dt['Rep2_A'] * fatorNormalizado_Rep2_A,
    'Rep1_B_CPM': dt['Rep1_B'] * fatorNormalizado_Rep1_B,
    'Rep2_B_CPM': dt['Rep2_B'] * fatorNormalizado_Rep2_B}
 
-dt_normalizado = pd.DataFrame(data_normalizado, columns=['gene_id','Rep1_A_CPM','Rep2_A_CPM','Rep1_B_CPM','Rep2_B_CPM'])
+dt_normalizado = pd.DataFrame(data_normalizado, columns=['gene_id', 'Rep1_A_CPM', 'Rep2_A_CPM', 'Rep1_B_CPM',
+                                                         'Rep2_B_CPM'])
 
-df = pd.merge(dt,dt_normalizado)
+df = pd.merge(dt, dt_normalizado)
 
 data_media = {
-   'gene_id' : df['gene_id'],
-   'Rep1_A_CPM' : df['Rep1_A_CPM'],
+   'gene_id': df['gene_id'],
+   'Rep1_A_CPM': df['Rep1_A_CPM'],
    'Rep2_A_CPM': df['Rep2_A_CPM'],
    'Rep1_B_CPM': df['Rep1_B_CPM'],
    'Rep2_B_CPM': df['Rep2_B_CPM'],
-   'Cond_A_CPM_media' : ((df['Rep1_A_CPM']+df['Rep2_A_CPM'])/2),
-   'Cond_B_CPM_media' : ((df['Rep1_B_CPM']+df['Rep2_B_CPM'])/2)}
+   'Cond_A_CPM_media': ((df['Rep1_A_CPM']+df['Rep2_A_CPM'])/2),
+   'Cond_B_CPM_media': ((df['Rep1_B_CPM']+df['Rep2_B_CPM'])/2)}
 
-df_media = pd.DataFrame(data_media, columns=['gene_id','Rep1_A_CPM','Rep2_A_CPM','Rep1_B_CPM','Rep2_B_CPM','Cond_A_CPM_media','Cond_B_CPM_media'])
+df_media = pd.DataFrame(data_media, columns=['gene_id', 'Rep1_A_CPM', 'Rep2_A_CPM', 'Rep1_B_CPM', 'Rep2_B_CPM',
+                                             'Cond_A_CPM_media', 'Cond_B_CPM_media'])
 
-df_final = pd.merge(df,df_media)
+df_final = pd.merge(df, df_media)
 
 asc_A = pd.DataFrame(df_final.nlargest(5, 'Cond_A_CPM_media'))
 asc_B = pd.DataFrame(df_final.nlargest(5, 'Cond_B_CPM_media'))
-A_and_B = asc_A.append(asc_B)
+id_gene = asc_A['gene_id'].append(asc_B['gene_id'])
 
-blast_A_and_B = NcbiblastxCommandline(cmd=blast_path, query=A_and_B, subject=dm, outfmt=6, out=out_blast, evalue=0.05)
-stdout, stderr = blast_A_and_B()
-blast_result = open(out_blast, "r")
-result_blast = pd.read_csv("C:\\Users\\bia_g\\PycharmProjects\\compII\\Projeto_Final\\dados\\out.blastp.outfmt6.fasta", sep='\t', names=["qseqid","sseqid","pident","length","mismatch","gapopen","qstart","qend","sstart","send","evalue","bitscore"])
-max_hit = result_blast.sort_values('bitscore')
-print(max_hit.iloc[[-1]])
-
-#Revisar o codigo
