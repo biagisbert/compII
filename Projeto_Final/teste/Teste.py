@@ -3,8 +3,8 @@ import pandas as pd
 from Bio import SeqIO
 from Bio.Blast.Applications import NcbiblastxCommandline
 
-blastx_path = "C:/Users/BECKY/Prog II/blast-2.2.18+/bin/blastx"
-meuOutput = "C:/Users/BECKY/Documents/proj_f/Out_blastx.txt"
+blastx_path = "C:\\Program Files\\NCBI\\blast-2.10.1+\\bin\\blastx.exe"
+meuOutput = "C:\\Users\\bia_g\\PycharmProjects\\compII\\Projeto_Final\\dados\\out.blastp.outfmt6.fasta"
 
 Tabela_1 = sys.argv[1]
 seq_desconhecida = sys.argv[2]
@@ -51,14 +51,12 @@ id_gene = asc_A['gene_id'].append(asc_B['gene_id'])
 gene_cond = list(id_gene)
 
 for i in gene_cond:
-     nomeArq = str("{}.fasta").format(i.id)
+     nomeArq = str("{}.fasta").format(i)
      refArquivoSaida = open(nomeArq,"w")
      SeqIO.write(i, refArquivoSaida, "fasta")
      refArquivoSaida.close()
      sequencia = nomeArq
-     meuOutput = "C:/Users/BECKY/Documents/proj_f/Out_blastx.txt"
      refArquivoSaida.close()
-     blastx_path = "C:/Users/BECKY/Prog II/blast-2.2.18+/bin/blastx"
 
      linha_de_comando_blastx = NcbiblastxCommandline(cmd=blastx_path, query=sequencia, subject=dm,
                                                          outfmt=6, out=meuOutput, evalue=0.05)
