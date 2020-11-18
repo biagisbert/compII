@@ -10,9 +10,14 @@ Tabela_1 = sys.argv[1]
 seq_desconhecida = sys.argv[2]
 arquivo_multi = sys.argv[3]
 
-dt = pd.read_excel(Tabela_1)
-dd = pd.read_csv(seq_desconhecida)
-dm = pd.read_csv(arquivo_multi)
+#(Tabela_1 = sys.argv[1]; seq_desconhecida = sys.argv[2]; arquivo_multi = sys.argv[3])
+#Tabela_1
+dt = pd.read_excel("C:\\Users\\bia_g\\PycharmProjects\\compII\\Projeto_Final\\dados\\Tabela_1.xlsx")
+#seq_desconhecida
+dd = SeqIO.parse("C:\\Users\\bia_g\\PycharmProjects\\compII\\Projeto_Final\\dados\\Rdesconhecidus.fasta", "fasta")
+#arquivo_multi
+dm = SeqIO.parse("C:\\Users\\bia_g\\PycharmProjects\\compII\\Projeto_Final\\dados\\VectorBase-48_RprolixusCDC_Annotated"
+                 "Proteins.fasta", "fasta")
 
 fatorNormalizado_Rep1_A = 10**6/dt['Rep1_A'].sum()
 fatorNormalizado_Rep2_A = 10**6/dt['Rep2_A'].sum()
