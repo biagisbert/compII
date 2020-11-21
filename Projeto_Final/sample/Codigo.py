@@ -1,21 +1,67 @@
-#ler da linha de comando: 1-tabela 1; 2-arquivo 1; 3-arquivo 2
-# 1- Crie colunas adicionais na tabela.
-# 1.1- Essas colunas vão receber os niveis de expressao normalizados por CPM
-# 1.2- Nomeie como 'Rep1_a_CPM, Rep2_A_CPM, Rep1_V_CPM e Rep2_B_CPM
-# 2- Crie mais colunas
-# 2.1- Recebe a expressãp normalizada (CPM) media por condiçao
-# 2.2- Nomeie as colunas como Cond_A_CPM_media e Cond_B_CPM_media
-# 3- Selecione os  cinco genes mais expressos de cada condiçao baseado na expressao media
-# 4- Faça uma busca BLAST da sequencia de DNA dos 10 genes selecionados anteriormente contra as sequencias de aminoacidos de R. prolixus
-# 5- A partir do BLAST, imprimir o melhor hit de cada um dos genes baseado no bitscore
-# 5.1- Caso o bitscore seja o mesmo, imprime o que tiver menor e-value
-# 5.2- Caso permaneça, imprimi qualquer um dos dois
-# A saida no terminal devera conter os seguintes dados:
-## gene_id     Cond_A_CPM_media     Cond_B_CPM_media      id_proteína_encontrada
-#### Onde gene_id é um dos genes mais expressos na condição A ou B;
-#### Cond_A_CPM_media e Cond_B_CPM_media são os valores médios de CPM para cada condição
-#### e id_proteína_encontrada é o identificador da sequência de proteína com melhor hit em R. prolixus.
+import sys
+import xlrd
+import pandas as pd
+from Bio import SeqIO
+from Bio.Blast.Applications import NcbiblastxCommandline
 
+blastx_path = "C:\\Program Files\\NCBI\\blast-2.10.1+\\bin\\blastx.exe"
+meuOutput = "C:\\Users\\bia_g\\PycharmProjects\\pythonProject\\out.blastp.outfmt6.fasta"
 
-#Caminho abrindo o terminal no projeto final:
-# python PycharmProjects\compII\Projeto_Final\teste\Teste.py PycharmProjects\compII\Projeto_Final\dados\Tabela_1.xlsx PycharmProjects\compII\Projeto_Final\dados\Rdesconhecidus.fasta dados\VectorBase-48_RprolixusCDC_AnnotatedProteins.fasta
+Tabela_1 = sys.argv[1]
+seq_desconhecida = sys.argv[2]
+arquivo_multi = sys.argv[3]
+dt = pd.read_excel(Tabela_1)
+dd = SeqIO.parse(seq_desconhecida, "fasta")
+dm = SeqIO.parse(arquivo_multi, "fasta")
+
+fatorNormalizado_Rep1_A = 10**6/dt['Rep1_A'].sum()
+fatorNormalizado_Rep2_A = 10**6/dt['Rep2_A'].sum()
+fatorNormalizado_Rep1_B = 10**6/dt['Rep1_B'].sum()
+fatorNormalizado_Rep2_B = 10**6/dt['Rep2_B'].sum()
+
+data_normalizado = {
+ 'gene_id': dt['gene_id'],
+ 'Rep1_A_CPM': dt['Rep1_A'] * fatorNormalizado_Rep1_A,
+ 'Rep2_A_CPM': dt['Rep2_A'] * fatorNormalizado_Rep2_A,
+ 'Rep1_B_CPM': dt['Rep1_B'] * fatorNormalizado_Rep1_B,
+ 'Rep2_B_CPM': dt['Rep2_B'] * fatorNormalizado_Rep2_B}
+
+dt_normalizado = pd.DataFrame(data_normalizado, columns=['gene_id', 'Rep1_A_CPM', 'Rep2_A_CPM', 'Rep1_B_CPM', 'Rep2_B_CPM'])
+
+df = pd.merge(dt, dt_normalizado)
+
+data_media = {
+ 'gene_id': df['gene_id'],
+ 'Rep1_A_CPM': df['Rep1_A_CPM'],
+ 'Rep2_A_CPM': df['Rep2_A_CPM'],
+ 'Rep1_B_CPM': df['Rep1_B_CPM'],
+ 'Rep2_B_CPM': df['Rep2_B_CPM'],
+ 'Cond_A_CPM_media': ((df['Rep1_A_CPM']+df['Rep2_A_CPM'])/2),
+ 'Cond_B_CPM_media': ((df['Rep1_B_CPM']+df['Rep2_B_CPM'])/2)}
+
+df_media = pd.DataFrame(data_media, columns=['gene_id', 'Rep1_A_CPM', 'Rep2_A_CPM', 'Rep1_B_CPM', 'Rep2_B_CPM', 'Cond_A_CPM_media', 'Cond_B_CPM_media'])
+
+df_final = pd.merge(df, df_media)
+
+asc_A = pd.DataFrame(df_final.nlargest(5, 'Cond_A_CPM_media'))
+asc_B = pd.DataFrame(df_final.nlargest(5, 'Cond_B_CPM_media'))
+id_gene = asc_A['gene_id'].append(asc_B['gene_id'])
+gene_cond = list(id_gene)
+
+count = 1
+for i in dd:
+    for e in gene_cond:
+        if i.id == e:
+            arg = ("gene_") + count.__str__()
+            arquivo = SeqIO.write(i.id, arg, "fasta")
+            count = count + 1
+        else:
+            continue
+
+while count <= 10:
+    refArquivo = "gene_" + count.__str__()
+    comand_line = NcbiblastxCommandline(cmd=blastx_path, query=refArquivo, subject=dm, outfmt=6, out=meuOutput, evalue=0.05)
+    result_blast = pd.read_csv(meuOutput, sep='\t', names=["qseqid","sseqid","pident","length","mismatch","gapopen","qstart","qend","sstart","send","evalue","bitscore"])
+    max_hit = result_blast.sort_values('bitscore')
+    print(max_hit)
+    count = count + 1
