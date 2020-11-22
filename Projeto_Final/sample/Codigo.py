@@ -10,6 +10,7 @@ meuOutput = "C:\\Users\\bia_g\\PycharmProjects\\pythonProject\\out.blastp.outfmt
 Tabela_1 = sys.argv[1]
 seq_desconhecida = sys.argv[2]
 arquivo_multi = sys.argv[3]
+
 dt = pd.read_excel(Tabela_1)
 dd = SeqIO.parse(seq_desconhecida, "fasta")
 dm = SeqIO.parse(arquivo_multi, "fasta")
@@ -52,16 +53,16 @@ count = 1
 for i in dd:
     for e in gene_cond:
         if i.id == e:
-            arg = ("gene_") + count.__str__()
-            arquivo = SeqIO.write(i.id, arg, "fasta")
+            arg = "gene_" + count.__str__()
+            arquivo = SeqIO.write(i, arg, "fasta")
             count = count + 1
         else:
             continue
 
-while count <= 10:
-    refArquivo = "gene_" + count.__str__()
-    comand_line = NcbiblastxCommandline(cmd=blastx_path, query=refArquivo, subject=dm, outfmt=6, out=meuOutput, evalue=0.05)
-    result_blast = pd.read_csv(meuOutput, sep='\t', names=["qseqid","sseqid","pident","length","mismatch","gapopen","qstart","qend","sstart","send","evalue","bitscore"])
+arquivo_genes = ["gene_1", "gene_2", "gene_3", "gene_4", "gene_5", "gene_6", "gene_7", "gene_8", "gene_9", "gene_10"]
+for e in arquivo_genes:
+    refArquivo = SeqIO.read(f"C:\\Users\\bia_g\\PycharmProjects\\pythonProject\\{e}", "fasta")
+    comand_line = NcbiblastxCommandline(cmd=blastx_path, query=refArquivo, subject=dm, out=meuOutput, outfmt=6, evalue=0.05)
+    result_blast = pd.read_csv(meuOutput, sep='\t', names=["qseqid", "sseqid", "pident", "length", "mismatch", "gapopen", "qstart", "qend", "sstart", "send", "evalue", "bitscore"])
     max_hit = result_blast.sort_values('bitscore')
-    print(max_hit)
-    count = count + 1
+    print(max_hit.iloc[[-1]])
